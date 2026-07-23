@@ -1,0 +1,181 @@
+# ============================================================================
+# LifeOS Spring Boot Master Configuration (application.yml)
+# Target Platform: Java 21 / Spring Boot 3.3+ / PostgreSQL 16+ / Redis / Flyway
+# ============================================================================
+
+spring:
+  application:
+    name: ${APP_NAME:lifeos-backend}
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+  # ---------------------------------------------------------------------------
+  # Datasource Configuration (PostgreSQL 16+ HikariCP Connection Pool)
+  # ---------------------------------------------------------------------------
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:lifeos_db}?currentSchema=identity,profile,people,relationship,calendar,event,task,goal,project,finance,knowledge,document,health,notification,ai,analytics,audit,search
+    username: ${DB_USER:lifeos_app}
+    password: ${DB_PASSWORD:lifeos_secret_password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: LifeOS-HikariCP
+      maximum-pool-size: ${DB_POOL_MAX:20}
+      minimum-idle: ${DB_POOL_MIN_IDLE:5}
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      leak-detection-threshold: 2000
+      validation-timeout: 5000
+
+  # ---------------------------------------------------------------------------
+  # Flyway Migration Configuration
+  # ---------------------------------------------------------------------------
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    baseline-on-migrate: true
+    baseline-version: 0.0.0
+    locations: classpath:db/migration
+    schemas:
+      - identity
+      - profile
+      - people
+      - relationship
+      - calendar
+      - event
+      - task
+      - goal
+      - project
+      - finance
+      - knowledge
+      - document
+      - health
+      - notification
+      - ai
+      - analytics
+      - audit
+      - search
+    default-schema: identity
+    connect-retries: 10
+    user: ${DB_USER:lifeos_app}
+    password: ${DB_PASSWORD:lifeos_secret_password}
+
+  # ---------------------------------------------------------------------------
+  # JPA / Hibernate Configuration
+  # ---------------------------------------------------------------------------
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+          time_zone: UTC
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+        format_sql: ${JPA_FORMAT_SQL:false}
+
+  # ---------------------------------------------------------------------------
+  # Redis Configuration
+  # ---------------------------------------------------------------------------
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:lifeos_redis_secret}
+      timeout: 2000ms
+
+  # ---------------------------------------------------------------------------
+  # Jackson Configuration
+  # ---------------------------------------------------------------------------
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: UTC
+
+# ---------------------------------------------------------------------------
+# Server Configuration
+# ---------------------------------------------------------------------------
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,application/json,application/javascript
+
+# ---------------------------------------------------------------------------
+# Actuator & Observability Metrics Configuration
+# ---------------------------------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus,flyway,info,env,loggers
+  endpoint:
+    health:
+      show-details: always
+
+# ---------------------------------------------------------------------------
+# Springdoc OpenAPI Swagger Configuration
+# ---------------------------------------------------------------------------
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    enabled: true
+    display-request-duration: true
+
+# ---------------------------------------------------------------------------
+# Custom Application Properties (@ConfigurationProperties(prefix = "app"))
+# ---------------------------------------------------------------------------
+app:
+  name: LifeOS
+  version: 1.0.0
+  description: AI-First Personal Operating System Backend
+  api:
+    version: v1
+    base-path: /api/v1
+
+  jwt:
+    secret-key: ${JWT_SECRET:dGVzdF9zZWNyZXRfa2V5X2Zvcl9saWZlb3NfYmFja2VuZF9lbnRlcnByaXNlX3NlY3VyaXR5X2ZyYW1ld29ya18yMDI2X2p3dF90b2tlbl9zcmluZ19ib290XzM1}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 Hours
+    refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000} # 7 Days
+    issuer: LifeOS-Auth-Service
+    audience: LifeOS-Clients
+    token-prefix: "Bearer "
+    header-name: Authorization
+
+  security:
+    permitted-paths:
+      - /v3/api-docs/**
+      - /swagger-ui/**
+      - /swagger-ui.html
+      - /actuator/**
+      - /api/v1/auth/**
+      - /error
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}
+      allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+      allowed-headers: "*"
+      exposed-headers: Authorization,X-Correlation-ID,X-Total-Count
+      allow-credentials: true
+      max-age-seconds: 3600
+
+  cache:
+    redis:
+      default-ttl-seconds: 3600
+      time-to-live-map:
+        users: 1800
+        auth_tokens: 3600

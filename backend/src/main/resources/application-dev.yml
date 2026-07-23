@@ -1,0 +1,16 @@
+# ============================================================================
+# LifeOS Development Environment Profile (application-dev.yml)
+# ============================================================================
+
+spring:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+logging:
+  level:
+    root: INFO
+    com.lifeos: DEBUG
+    org.springframework.security: INFO
