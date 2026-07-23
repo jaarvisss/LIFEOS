@@ -34,20 +34,21 @@ public class DeliveryLogEntity {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(name = "channel_id")
-    private UUID channelId;
+    @Column(name = "channel_type", nullable = false, length = 50)
+    private String channelType;
 
-    @Column(name = "notification_type", nullable = false, length = 100)
-    private String notificationType;
+    @Column(name = "subject", length = 255)
+    private String subject;
 
-    @Column(name = "title", nullable = false, length = 255)
-    private String title;
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    private String content;
 
-    @Column(name = "body", nullable = false, columnDefinition = "TEXT")
-    private String body;
-
+    @Builder.Default
     @Column(name = "status", nullable = false, length = 50)
-    private String status = "DELIVERED";
+    private String status = "PENDING";
+
+    @Column(name = "error_message", columnDefinition = "TEXT")
+    private String errorMessage;
 
     @Column(name = "sent_at")
     private Instant sentAt;
@@ -62,9 +63,6 @@ public class DeliveryLogEntity {
         }
         if (this.createdAt == null) {
             this.createdAt = Instant.now();
-        }
-        if (this.sentAt == null) {
-            this.sentAt = Instant.now();
         }
     }
 }

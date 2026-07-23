@@ -47,16 +47,8 @@ public class OpenApiConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("lifeos-public-api")
+                .group("1-lifeos-public-api")
                 .pathsToMatch("/api/v1/**")
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi actuatorApi() {
-        return GroupedOpenApi.builder()
-                .group("lifeos-actuator-api")
-                .pathsToMatch("/actuator/**")
                 .build();
     }
 }

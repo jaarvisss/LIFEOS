@@ -5,10 +5,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -30,9 +33,12 @@ public class DashboardEntity extends BaseEntity {
     @Column(name = "dashboard_name", nullable = false, length = 150)
     private String dashboardName;
 
+    @Builder.Default
+    @JdbcTypeCode(SqlTypes.OTHER)
     @Column(name = "layout_config_jsonb", nullable = false, columnDefinition = "jsonb")
     private String layoutConfigJsonb = "{}";
 
+    @Builder.Default
     @Column(name = "is_default", nullable = false)
     private Boolean isDefault = false;
 }

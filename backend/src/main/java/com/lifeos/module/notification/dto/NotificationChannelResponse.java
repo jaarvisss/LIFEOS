@@ -10,6 +10,6 @@ public record NotificationChannelResponse(
         UUID userId,
         String channelType,
         String destination,
-        Boolean isEnabled
+        Boolean isVerified
 ) {
 }

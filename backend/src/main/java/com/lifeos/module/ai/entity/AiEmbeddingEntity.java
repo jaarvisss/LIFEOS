@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -36,6 +38,7 @@ public class AiEmbeddingEntity extends BaseEntity {
     @Column(name = "chunk_content", nullable = false, columnDefinition = "TEXT")
     private String chunkContent;
 
-    @Column(name = "embedding", nullable = false, columnDefinition = "vector(1536)")
+    @JdbcTypeCode(SqlTypes.OTHER)
+    @Column(name = "embedding", nullable = false, columnDefinition = "vector")
     private String embedding;
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,6 +34,7 @@ public class NotificationChannelEntity extends BaseEntity {
     @Column(name = "destination", nullable = false, length = 255)
     private String destination;
 
-    @Column(name = "is_enabled", nullable = false)
-    private Boolean isEnabled = true;
+    @Builder.Default
+    @Column(name = "is_verified", nullable = false)
+    private Boolean isVerified = false;
 }

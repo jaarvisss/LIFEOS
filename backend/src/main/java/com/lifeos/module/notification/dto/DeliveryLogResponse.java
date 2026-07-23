@@ -9,11 +9,11 @@ import java.util.UUID;
 public record DeliveryLogResponse(
         UUID id,
         UUID userId,
-        UUID channelId,
-        String notificationType,
-        String title,
-        String body,
+        String channelType,
+        String subject,
+        String content,
         String status,
+        String errorMessage,
         Instant sentAt,
         Instant createdAt
 ) {

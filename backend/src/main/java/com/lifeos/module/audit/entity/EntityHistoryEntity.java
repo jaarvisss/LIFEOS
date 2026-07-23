@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -40,6 +42,7 @@ public class EntityHistoryEntity {
     @Column(name = "version_number", nullable = false)
     private Long versionNumber;
 
+    @JdbcTypeCode(SqlTypes.OTHER)
     @Column(name = "snapshot_jsonb", nullable = false, columnDefinition = "jsonb")
     private String snapshotJsonb;
 

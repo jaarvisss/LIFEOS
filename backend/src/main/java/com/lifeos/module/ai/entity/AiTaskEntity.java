@@ -5,12 +5,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -28,21 +30,14 @@ public class AiTaskEntity extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(name = "task_name", nullable = false, length = 255)
+    @Column(name = "task_name", nullable = false, length = 150)
     private String taskName;
 
+    @JdbcTypeCode(SqlTypes.OTHER)
     @Column(name = "parameters_jsonb", columnDefinition = "jsonb")
     private String parametersJsonb;
 
+    @Builder.Default
     @Column(name = "status", nullable = false, length = 50)
     private String status = "PENDING";
-
-    @Column(name = "result_summary", columnDefinition = "TEXT")
-    private String resultSummary;
-
-    @Column(name = "scheduled_for")
-    private Instant scheduledFor;
-
-    @Column(name = "executed_at")
-    private Instant executedAt;
 }
