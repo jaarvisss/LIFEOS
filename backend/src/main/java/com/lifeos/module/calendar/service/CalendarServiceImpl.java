@@ -28,6 +28,9 @@ public class CalendarServiceImpl implements CalendarService {
     public CalendarResponse createCalendar(UUID userId, CalendarRequest request) {
         CalendarEntity entity = calendarMapper.toEntity(request);
         entity.setUserId(userId);
+        if (entity.getIsDefault() == null) {
+            entity.setIsDefault(false);
+        }
         entity = calendarRepository.save(entity);
         return calendarMapper.toDto(entity);
     }
@@ -64,6 +67,9 @@ public class CalendarServiceImpl implements CalendarService {
                 .orElseThrow(() -> new ResourceNotFoundException("Calendar", "id", id));
 
         calendarMapper.updateEntityFromDto(request, entity);
+        if (entity.getIsDefault() == null) {
+            entity.setIsDefault(false);
+        }
         entity = calendarRepository.save(entity);
         return calendarMapper.toDto(entity);
     }

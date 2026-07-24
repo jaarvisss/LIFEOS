@@ -30,6 +30,9 @@ public class NoteServiceImpl implements NoteService {
     public NoteResponse createNote(UUID userId, NoteRequest request) {
         NoteEntity note = noteMapper.toEntity(request);
         note.setUserId(userId);
+        if (note.getIsFavorite() == null) {
+            note.setIsFavorite(false);
+        }
         note = noteRepository.save(note);
         return noteMapper.toDto(note);
     }
@@ -70,6 +73,9 @@ public class NoteServiceImpl implements NoteService {
                 .orElseThrow(() -> new ResourceNotFoundException("Note", "id", id));
 
         noteMapper.updateEntityFromDto(request, note);
+        if (note.getIsFavorite() == null) {
+            note.setIsFavorite(false);
+        }
         note = noteRepository.save(note);
         return noteMapper.toDto(note);
     }

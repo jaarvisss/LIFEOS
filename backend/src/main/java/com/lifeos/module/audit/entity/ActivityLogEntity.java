@@ -42,7 +42,7 @@ public class ActivityLogEntity {
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
-    @JdbcTypeCode(SqlTypes.OTHER)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata_jsonb", columnDefinition = "jsonb")
     private String metadataJsonb;
 

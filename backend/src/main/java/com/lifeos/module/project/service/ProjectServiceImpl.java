@@ -30,6 +30,9 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponse createProject(UUID userId, ProjectRequest request) {
         ProjectEntity project = projectMapper.toEntity(request);
         project.setUserId(userId);
+        if (project.getStatus() == null || project.getStatus().isBlank()) {
+            project.setStatus("ACTIVE");
+        }
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
     }
@@ -56,6 +59,9 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new ResourceNotFoundException("Project", "id", id));
 
         projectMapper.updateEntityFromDto(request, project);
+        if (project.getStatus() == null || project.getStatus().isBlank()) {
+            project.setStatus("ACTIVE");
+        }
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
     }

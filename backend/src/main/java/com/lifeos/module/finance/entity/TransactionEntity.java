@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,6 +39,7 @@ public class TransactionEntity extends BaseSoftDeleteEntity {
     @Column(name = "amount", nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;
 
+    @Builder.Default
     @Column(name = "currency", nullable = false, length = 3)
     private String currency = "USD";
 
@@ -47,6 +49,7 @@ public class TransactionEntity extends BaseSoftDeleteEntity {
     @Column(name = "category", nullable = false, length = 100)
     private String category;
 
+    @Builder.Default
     @Column(name = "transaction_timestamp", nullable = false)
     private Instant transactionTimestamp = Instant.now();
 

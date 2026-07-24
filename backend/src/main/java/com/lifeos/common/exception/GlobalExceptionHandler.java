@@ -12,6 +12,7 @@ import org.slf4j.MDC;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
@@ -48,6 +49,19 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(ex.getHttpStatus())
                 .body(ApiResponse.error(apiError, ex.getHttpStatus().value()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
+        log.warn("Malformed JSON request on {}: {}", request.getRequestURI(), ex.getMessage());
+        ApiError apiError = ApiError.of(
+                ErrorCode.MALFORMED_JSON,
+                "Malformed JSON request body: Ensure request JSON contains valid single-brace syntax",
+                request.getRequestURI(),
+                getCorrelationId()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(apiError, HttpStatus.BAD_REQUEST.value()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

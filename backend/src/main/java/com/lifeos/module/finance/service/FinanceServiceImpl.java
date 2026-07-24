@@ -103,6 +103,9 @@ public class FinanceServiceImpl implements FinanceService {
 
         TransactionEntity transaction = financeMapper.toEntity(request);
         transaction.setUserId(userId);
+        if (transaction.getCurrency() == null || transaction.getCurrency().isBlank()) {
+            transaction.setCurrency(account.getCurrency() != null ? account.getCurrency() : "USD");
+        }
         if (transaction.getTransactionTimestamp() == null) {
             transaction.setTransactionTimestamp(Instant.now());
         }

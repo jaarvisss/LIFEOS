@@ -1,24 +1,16 @@
 package com.lifeos.module.notification.entity;
 
+import com.lifeos.common.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.experimental.SuperBuilder;
 
-import java.time.Instant;
-import java.time.LocalTime;
 import java.util.UUID;
 
 /**
@@ -26,41 +18,29 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(schema = "notification", name = "notification_preferences")
-@EntityListeners(AuditingEntityListener.class)
-public class NotificationPreferenceEntity {
+public class NotificationPreferenceEntity extends BaseEntity {
 
-    @Id
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(name = "quiet_hours_start")
-    private LocalTime quietHoursStart;
+    @Builder.Default
+    @Column(name = "email_enabled", nullable = false)
+    private Boolean emailEnabled = true;
 
-    @Column(name = "quiet_hours_end")
-    private LocalTime quietHoursEnd;
+    @Builder.Default
+    @Column(name = "push_enabled", nullable = false)
+    private Boolean pushEnabled = true;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
+    @Builder.Default
+    @Column(name = "whatsapp_enabled", nullable = false)
+    private Boolean whatsappEnabled = false;
 
-    @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
-
-    @CreatedBy
-    @Column(name = "created_by", updatable = false)
-    private String createdBy;
-
-    @LastModifiedBy
-    @Column(name = "updated_by")
-    private String updatedBy;
-
-    @Version
-    @Column(name = "version")
-    private Long version;
+    @Builder.Default
+    @Column(name = "sms_enabled", nullable = false)
+    private Boolean smsEnabled = false;
 }

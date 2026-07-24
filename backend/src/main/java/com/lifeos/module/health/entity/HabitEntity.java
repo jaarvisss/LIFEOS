@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,12 +34,15 @@ public class HabitEntity extends BaseSoftDeleteEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     @Column(name = "target_frequency", nullable = false, length = 50)
     private String targetFrequency = "DAILY";
 
+    @Builder.Default
     @Column(name = "current_streak_count", nullable = false)
     private Integer currentStreakCount = 0;
 
+    @Builder.Default
     @Column(name = "best_streak_count", nullable = false)
     private Integer bestStreakCount = 0;
 }

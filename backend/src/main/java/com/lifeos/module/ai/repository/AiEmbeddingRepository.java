@@ -17,7 +17,7 @@ public interface AiEmbeddingRepository extends JpaRepository<AiEmbeddingEntity, 
 
     List<AiEmbeddingEntity> findByUserIdAndSourceType(UUID userId, String sourceType);
 
-    @Query(value = "SELECT * FROM ai.ai_semantic_search(:userId, CAST(:queryEmbedding AS vector), :threshold, :limitCount)", nativeQuery = true)
+    @Query(value = "SELECT * FROM ai.ai_semantic_search(:userId, CAST(:queryEmbedding AS public.vector), :threshold, :limitCount)", nativeQuery = true)
     List<Object[]> searchSemanticVector(
             @Param("userId") UUID userId,
             @Param("queryEmbedding") String queryEmbedding,

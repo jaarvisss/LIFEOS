@@ -33,7 +33,7 @@ public class AiTaskEntity extends BaseEntity {
     @Column(name = "task_name", nullable = false, length = 150)
     private String taskName;
 
-    @JdbcTypeCode(SqlTypes.OTHER)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "parameters_jsonb", columnDefinition = "jsonb")
     private String parametersJsonb;
 

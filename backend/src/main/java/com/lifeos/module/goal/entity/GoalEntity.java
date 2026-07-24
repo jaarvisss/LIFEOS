@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,15 +36,18 @@ public class GoalEntity extends BaseSoftDeleteEntity {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Builder.Default
     @Column(name = "category", nullable = false, length = 50)
     private String category = "PERSONAL";
 
+    @Builder.Default
     @Column(name = "status", nullable = false, length = 50)
     private String status = "IN_PROGRESS";
 
     @Column(name = "target_date")
     private LocalDate targetDate;
 
+    @Builder.Default
     @Column(name = "progress_percentage", nullable = false, precision = 5, scale = 2)
     private BigDecimal progressPercentage = BigDecimal.ZERO;
 }

@@ -45,7 +45,7 @@ public class AuditLogEntity {
     @Column(name = "action", nullable = false, length = 50)
     private String action;
 
-    @JdbcTypeCode(SqlTypes.OTHER)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "diff_jsonb", columnDefinition = "jsonb")
     private String diffJsonb;
 

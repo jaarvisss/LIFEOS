@@ -39,6 +39,15 @@ public class GoalServiceImpl implements GoalService {
     public GoalResponse createGoal(UUID userId, GoalRequest request) {
         GoalEntity goal = goalMapper.toEntity(request);
         goal.setUserId(userId);
+        if (goal.getCategory() == null || goal.getCategory().isBlank()) {
+            goal.setCategory("PERSONAL");
+        }
+        if (goal.getStatus() == null || goal.getStatus().isBlank()) {
+            goal.setStatus("IN_PROGRESS");
+        }
+        if (goal.getProgressPercentage() == null) {
+            goal.setProgressPercentage(BigDecimal.ZERO);
+        }
         goal = goalRepository.save(goal);
         return goalMapper.toDto(goal);
     }
@@ -70,6 +79,15 @@ public class GoalServiceImpl implements GoalService {
                 .orElseThrow(() -> new ResourceNotFoundException("Goal", "id", id));
 
         goalMapper.updateEntityFromDto(request, goal);
+        if (goal.getCategory() == null || goal.getCategory().isBlank()) {
+            goal.setCategory("PERSONAL");
+        }
+        if (goal.getStatus() == null || goal.getStatus().isBlank()) {
+            goal.setStatus("IN_PROGRESS");
+        }
+        if (goal.getProgressPercentage() == null) {
+            goal.setProgressPercentage(BigDecimal.ZERO);
+        }
         goal = goalRepository.save(goal);
         return goalMapper.toDto(goal);
     }

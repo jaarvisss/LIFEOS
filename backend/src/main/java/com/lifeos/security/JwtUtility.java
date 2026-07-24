@@ -14,7 +14,11 @@ public final class JwtUtility {
     public static String extractTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(SecurityConstants.HEADER_AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
-            return bearerToken.substring(SecurityConstants.TOKEN_PREFIX.length());
+            String token = bearerToken.substring(SecurityConstants.TOKEN_PREFIX.length()).trim();
+            if (token.startsWith("\"") && token.endsWith("\"") && token.length() > 1) {
+                token = token.substring(1, token.length() - 1);
+            }
+            return token;
         }
         return null;
     }

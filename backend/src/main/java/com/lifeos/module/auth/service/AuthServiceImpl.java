@@ -25,9 +25,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.Instant;
 import java.util.Collections;
-
 import java.util.Set;
 
 /**
@@ -68,6 +69,7 @@ public class AuthServiceImpl implements AuthService {
                 .userType("INDIVIDUAL")
                 .status("ACTIVE")
                 .emailVerified(true)
+                .mfaEnabled(false)
                 .roles(Set.of(userRole))
                 .build();
 
@@ -156,7 +158,8 @@ public class AuthServiceImpl implements AuthService {
             throw new UnauthorizedException("Invalid or expired refresh token");
         }
 
-        RefreshTokenEntity tokenEntity = refreshTokenRepository.findByTokenHashAndRevokedFalse(refreshToken)
+        String tokenHash = hashToken(refreshToken);
+        RefreshTokenEntity tokenEntity = refreshTokenRepository.findByTokenHashAndRevokedFalse(tokenHash)
                 .orElseThrow(() -> new UnauthorizedException("Refresh token not found or revoked"));
 
         UserEntity user = userRepository.findById(tokenEntity.getUserId())
@@ -193,7 +196,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void logout(String refreshToken) {
         if (refreshToken != null) {
-            refreshTokenRepository.findByTokenHashAndRevokedFalse(refreshToken)
+            String tokenHash = hashToken(refreshToken);
+            refreshTokenRepository.findByTokenHashAndRevokedFalse(tokenHash)
                     .ifPresent(token -> {
                         token.setRevoked(true);
                         token.setRevokedAt(Instant.now());
@@ -205,10 +209,27 @@ public class AuthServiceImpl implements AuthService {
     private void saveRefreshToken(java.util.UUID userId, String refreshToken) {
         RefreshTokenEntity entity = RefreshTokenEntity.builder()
                 .userId(userId)
-                .tokenHash(refreshToken)
+                .tokenHash(hashToken(refreshToken))
                 .expiresAt(Instant.now().plusMillis(jwtProperties.getRefreshExpirationMs()))
                 .revoked(false)
                 .build();
         refreshTokenRepository.save(entity);
+    }
+
+    private String hashToken(String token) {
+        if (token == null) return null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(token.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception ex) {
+            return token.length() > 255 ? token.substring(0, 255) : token;
+        }
     }
 }

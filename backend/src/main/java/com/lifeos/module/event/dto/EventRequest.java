@@ -9,7 +9,6 @@ import java.util.UUID;
  * Record DTO for Event creation/update request.
  */
 public record EventRequest(
-        @NotNull(message = "Calendar ID is required")
         UUID calendarId,
 
         @NotBlank(message = "Title is required")

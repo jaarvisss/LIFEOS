@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,9 +44,11 @@ public class EventEntity extends BaseSoftDeleteEntity {
     @Column(name = "end_time", nullable = false)
     private Instant endTime;
 
+    @Builder.Default
     @Column(name = "is_all_day", nullable = false)
     private Boolean isAllDay = false;
 
+    @Builder.Default
     @Column(name = "event_status", nullable = false, length = 50)
     private String eventStatus = "CONFIRMED";
 }

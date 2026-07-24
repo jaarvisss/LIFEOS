@@ -9,6 +9,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,18 +33,23 @@ public class UserEntity extends BaseSoftDeleteEntity {
     @Column(name = "email", nullable = false, length = 255)
     private String email;
 
+    @Builder.Default
     @Column(name = "user_type", nullable = false, length = 50)
     private String userType = "INDIVIDUAL";
 
+    @Builder.Default
     @Column(name = "status", nullable = false, length = 50)
     private String status = "ACTIVE";
 
+    @Builder.Default
     @Column(name = "email_verified", nullable = false)
     private Boolean emailVerified = false;
 
+    @Builder.Default
     @Column(name = "mfa_enabled", nullable = false)
     private Boolean mfaEnabled = false;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             schema = "identity",

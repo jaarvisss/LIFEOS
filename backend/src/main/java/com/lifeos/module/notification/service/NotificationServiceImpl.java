@@ -38,18 +38,31 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional(readOnly = true)
     public NotificationPreferenceResponse getPreferences(UUID userId) {
-        NotificationPreferenceEntity entity = notificationPreferenceRepository.findById(userId)
-                .orElseGet(() -> NotificationPreferenceEntity.builder().userId(userId).build());
+        NotificationPreferenceEntity entity = notificationPreferenceRepository.findByUserId(userId)
+                .orElseGet(() -> NotificationPreferenceEntity.builder()
+                        .userId(userId)
+                        .emailEnabled(true)
+                        .pushEnabled(true)
+                        .whatsappEnabled(false)
+                        .smsEnabled(false)
+                        .build());
         return notificationMapper.toDto(entity);
     }
 
     @Override
     @Transactional
     public NotificationPreferenceResponse updatePreferences(UUID userId, NotificationPreferenceRequest request) {
-        NotificationPreferenceEntity entity = notificationPreferenceRepository.findById(userId)
-                .orElseGet(() -> NotificationPreferenceEntity.builder().userId(userId).build());
+        NotificationPreferenceEntity entity = notificationPreferenceRepository.findByUserId(userId)
+                .orElseGet(() -> NotificationPreferenceEntity.builder()
+                        .userId(userId)
+                        .build());
 
         notificationMapper.updateEntityFromDto(request, entity);
+        if (entity.getEmailEnabled() == null) entity.setEmailEnabled(true);
+        if (entity.getPushEnabled() == null) entity.setPushEnabled(true);
+        if (entity.getWhatsappEnabled() == null) entity.setWhatsappEnabled(false);
+        if (entity.getSmsEnabled() == null) entity.setSmsEnabled(false);
+
         entity = notificationPreferenceRepository.save(entity);
         return notificationMapper.toDto(entity);
     }

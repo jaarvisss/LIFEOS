@@ -58,6 +58,15 @@ public class HealthServiceImpl implements HealthService {
     public HabitResponse createHabit(UUID userId, HabitRequest request) {
         HabitEntity habit = healthMapper.toEntity(request);
         habit.setUserId(userId);
+        if (habit.getTargetFrequency() == null || habit.getTargetFrequency().isBlank()) {
+            habit.setTargetFrequency("DAILY");
+        }
+        if (habit.getCurrentStreakCount() == null) {
+            habit.setCurrentStreakCount(0);
+        }
+        if (habit.getBestStreakCount() == null) {
+            habit.setBestStreakCount(0);
+        }
         habit = habitRepository.save(habit);
         return healthMapper.toDto(habit);
     }
@@ -78,8 +87,11 @@ public class HealthServiceImpl implements HealthService {
                 .orElseGet(() -> healthMapper.toEntity(request));
 
         if (log.getId() == null) {
-            habit.setCurrentStreakCount(habit.getCurrentStreakCount() + 1);
-            if (habit.getCurrentStreakCount() > habit.getBestStreakCount()) {
+            int currentStreak = habit.getCurrentStreakCount() != null ? habit.getCurrentStreakCount() : 0;
+            int bestStreak = habit.getBestStreakCount() != null ? habit.getBestStreakCount() : 0;
+            
+            habit.setCurrentStreakCount(currentStreak + 1);
+            if (habit.getCurrentStreakCount() > bestStreak) {
                 habit.setBestStreakCount(habit.getCurrentStreakCount());
             }
             habitRepository.save(habit);

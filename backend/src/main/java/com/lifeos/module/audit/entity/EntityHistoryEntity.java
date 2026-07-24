@@ -42,7 +42,7 @@ public class EntityHistoryEntity {
     @Column(name = "version_number", nullable = false)
     private Long versionNumber;
 
-    @JdbcTypeCode(SqlTypes.OTHER)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "snapshot_jsonb", nullable = false, columnDefinition = "jsonb")
     private String snapshotJsonb;
 

@@ -36,7 +36,22 @@ public class PaginationRequest {
     private String sortDirection = CommonConstants.DEFAULT_SORT_DIRECTION;
 
     public Pageable toPageable() {
-        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
-        return PageRequest.of(page, size, sort);
+        Sort.Direction direction;
+        try {
+            direction = Sort.Direction.fromString(sortDirection);
+        } catch (Exception ex) {
+            direction = Sort.Direction.DESC;
+        }
+
+        String field = sortBy;
+        if (field == null || field.isBlank() || "string".equalsIgnoreCase(field)) {
+            field = "createdAt";
+        }
+
+        try {
+            return PageRequest.of(page, size, Sort.by(direction, field));
+        } catch (Exception ex) {
+            return PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        }
     }
 }

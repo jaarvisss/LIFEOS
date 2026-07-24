@@ -14,7 +14,7 @@ spring:
   # Datasource Configuration (PostgreSQL 16+ HikariCP Connection Pool)
   # ---------------------------------------------------------------------------
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:lifeos_db}?currentSchema=identity,profile,people,relationship,calendar,event,task,goal,project,finance,knowledge,document,health,notification,ai,analytics,audit,search
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:lifeos_db}?currentSchema=identity,profile,people,relationship,calendar,event,task,goal,project,finance,knowledge,document,health,notification,ai,analytics,audit,search,public
     username: ${DB_USER:lifeos_app}
     password: ${DB_PASSWORD:lifeos_secret_password}
     driver-class-name: org.postgresql.Driver

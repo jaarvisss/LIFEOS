@@ -1,6 +1,5 @@
 package com.lifeos.module.notification.dto;
 
-import java.time.LocalTime;
 import java.util.UUID;
 
 /**
@@ -8,7 +7,9 @@ import java.util.UUID;
  */
 public record NotificationPreferenceResponse(
         UUID userId,
-        LocalTime quietHoursStart,
-        LocalTime quietHoursEnd
+        Boolean emailEnabled,
+        Boolean pushEnabled,
+        Boolean whatsappEnabled,
+        Boolean smsEnabled
 ) {
 }

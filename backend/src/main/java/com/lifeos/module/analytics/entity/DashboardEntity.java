@@ -34,7 +34,7 @@ public class DashboardEntity extends BaseEntity {
     private String dashboardName;
 
     @Builder.Default
-    @JdbcTypeCode(SqlTypes.OTHER)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "layout_config_jsonb", nullable = false, columnDefinition = "jsonb")
     private String layoutConfigJsonb = "{}";
 

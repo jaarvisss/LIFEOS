@@ -15,8 +15,8 @@ public record SleepLogRequest(
         @NotNull(message = "Sleep end time is required")
         Instant sleepEnd,
 
-        @Min(value = 1, message = "Quality score must be between 1 and 100")
-        @Max(value = 100, message = "Quality score must be between 1 and 100")
+        @Min(value = 1, message = "Quality score must be between 1 and 10")
+        @Max(value = 10, message = "Quality score must be between 1 and 10")
         Integer qualityScore
 ) {
 }

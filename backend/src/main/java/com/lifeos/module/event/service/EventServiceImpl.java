@@ -3,6 +3,7 @@ package com.lifeos.module.event.service;
 import com.lifeos.common.exception.ResourceNotFoundException;
 import com.lifeos.common.request.PaginationRequest;
 import com.lifeos.common.response.PagedResponse;
+import com.lifeos.module.calendar.entity.CalendarEntity;
 import com.lifeos.module.calendar.repository.CalendarRepository;
 import com.lifeos.module.event.dto.EventRequest;
 import com.lifeos.module.event.dto.EventResponse;
@@ -37,10 +38,34 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventResponse createEvent(UUID userId, EventRequest request) {
-        calendarRepository.findByIdAndUserIdAndIsDeletedFalse(request.calendarId(), userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Calendar", "id", request.calendarId()));
+        UUID calendarId = request.calendarId();
+        if (calendarId == null) {
+            List<CalendarEntity> calendars = calendarRepository.findByUserIdAndIsDeletedFalse(userId);
+            if (calendars.isEmpty()) {
+                CalendarEntity defaultCal = calendarRepository.save(CalendarEntity.builder()
+                        .userId(userId)
+                        .name("Personal Calendar")
+                        .description("Default personal calendar")
+                        .colorCode("#3B82F6")
+                        .isDefault(true)
+                        .build());
+                calendarId = defaultCal.getId();
+            } else {
+                calendarId = calendars.get(0).getId();
+            }
+        } else {
+            calendarRepository.findByIdAndUserIdAndIsDeletedFalse(calendarId, userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Calendar", "id", request.calendarId()));
+        }
 
         EventEntity entity = eventMapper.toEntity(request);
+        entity.setCalendarId(calendarId);
+        if (entity.getIsAllDay() == null) {
+            entity.setIsAllDay(false);
+        }
+        if (entity.getEventStatus() == null || entity.getEventStatus().isBlank()) {
+            entity.setEventStatus("CONFIRMED");
+        }
         entity = eventRepository.save(entity);
         return eventMapper.toDto(entity);
     }
@@ -79,6 +104,12 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new ResourceNotFoundException("Event", "id", id));
 
         eventMapper.updateEntityFromDto(request, entity);
+        if (entity.getIsAllDay() == null) {
+            entity.setIsAllDay(false);
+        }
+        if (entity.getEventStatus() == null || entity.getEventStatus().isBlank()) {
+            entity.setEventStatus("CONFIRMED");
+        }
         entity = eventRepository.save(entity);
         return eventMapper.toDto(entity);
     }

@@ -34,7 +34,7 @@ public class SearchController {
     @GetMapping
     @Operation(summary = "Global Full-Text Search", description = "Searches tasks, notes, goals, contacts, and documents by title and content summary.")
     public ResponseEntity<ApiResponse<PagedResponse<SearchResultResponse>>> search(
-            @RequestParam("q") String query,
+            @RequestParam(value = "q", required = false, defaultValue = "") String query,
             @RequestParam(value = "entityType", required = false) String entityType,
             @Valid PaginationRequest paginationRequest) {
         UUID userId = SecurityUtils.getCurrentUserId();
