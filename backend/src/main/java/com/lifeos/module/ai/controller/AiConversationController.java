@@ -31,7 +31,7 @@ import java.util.UUID;
  * REST Controller for AI Conversation & Messaging Platform.
  */
 @RestController
-@RequestMapping("/api/v1/ai/conversations")
+@RequestMapping("/api/v1/ai/history")
 @RequiredArgsConstructor
 @Tag(name = "AI Conversation Engine", description = "Endpoints for AI conversation history, system instructions, and interactive chat")
 public class AiConversationController {

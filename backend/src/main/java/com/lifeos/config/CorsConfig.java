@@ -6,6 +6,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
 /**
  * Enterprise Cross-Origin Resource Sharing (CORS) Configuration Source Bean.
  */
@@ -17,11 +19,11 @@ public class CorsConfig {
         SecurityProperties.CorsProperties corsProps = securityProperties.getCors();
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(corsProps.getAllowedOrigins());
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(corsProps.getAllowedMethods());
         configuration.setAllowedHeaders(corsProps.getAllowedHeaders());
         configuration.setExposedHeaders(corsProps.getExposedHeaders());
-        configuration.setAllowCredentials(corsProps.isAllowCredentials());
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(corsProps.getMaxAgeSeconds());
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

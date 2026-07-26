@@ -4,6 +4,7 @@ import '../../experiences/onboarding/splash_screen.dart';
 import '../../experiences/onboarding/onboarding_flow.dart';
 import '../../experiences/auth/login_screen.dart';
 import '../../experiences/auth/signup_screen.dart';
+import '../../experiences/auth/forgot_password_screen.dart';
 import '../../experiences/home/home_screen.dart';
 import '../../experiences/companion/companion_screen.dart';
 import '../../experiences/domains/domain_hub_screen.dart';
@@ -29,6 +30,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/signup',
         builder: (context, state) => const SignupScreen(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordScreen(),
       ),
       ShellRoute(
         builder: (context, state, child) => AppScaffold(child: child),
